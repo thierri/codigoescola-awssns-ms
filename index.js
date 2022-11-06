@@ -9,21 +9,31 @@ app.use(express.json({ type: ['text/*', '*/json'] }))
 app.use(cors())
 
 app.get('/', (request, response) => {
-    console.log('Endpoint get solicitado!!')
+    console.log('Obtendo estatísticas... (GET)')
     response.send(dados)
 })
 
 app.post('/', (request, response) => {
-    console.log('Endpoint POST solicitado!!')
-    console.log(request.body)
+    console.log('Nova mensagem recebida... (POST)')
+
+    if (request.body.SubscribeURL) {
+        console.log('-> URL para inscrição: ' + request.body.SubscribeURL)
+    }
+
+    if (request.body.Message) {
+        console.log('-> Mensagem: ' + request.body.Message)
+    }
+
     dados.push({
         message: request.body.Message,
         timestamp: Date.now()
     })
-    response.send('OI!')
+
+    response.send({ ok: true })
 })
 
+const porta = process.argv[2]
 
-app.listen(3000, () => {
-    console.log('Microservico Rodando!')
+app.listen(porta, () => {
+    console.log('Microservico Rodando! Porta: ' + porta)
 })
